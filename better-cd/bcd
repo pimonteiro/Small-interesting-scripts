@@ -3,16 +3,25 @@
 
 DIR=$1
 
+if [ $DIR == "" ]
+then
+	echo "No directory specified. Use bcd <dir_name>"
+	exit 1
+fi
+
+
+
 #Get all possible directories
 my_array=( $(find /home -type d -name $DIR 2> /dev/null) )
 length_array=${#my_array[@]}
 
+echo $DIR
 
 #Pretty straight forward
 if [ $length_array == 0 ]
 then
     echo "No directory found"
-    return
+    exit 1
 fi
 
 
@@ -20,7 +29,7 @@ fi
 if [ $length_array == 1 ]
 then
 	cd ${my_array[0]}
-	return
+	exit 0
 fi
 
 #In case of mulitple  options it will show them and wait for input of the user
@@ -38,7 +47,7 @@ then
 	cd ${my_array[0]}
 elif [ $input_dir -gt $length_array ]
 then
-	return
+	exit 1
 else
 	cd ${my_array[$input_dir]}
 fi
