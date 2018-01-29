@@ -1,0 +1,44 @@
+#!/bin/bash
+#This script allows me to cd to any folder, at any level of '/'
+
+DIR=$1
+
+#Get all possible directories
+my_array=( $(find /home -type d -name $DIR 2> /dev/null) )
+length_array=${#my_array[@]}
+
+
+#Pretty straight forward
+if [ $length_array == 0 ]
+then
+    echo "No directory found"
+    return
+fi
+
+
+#In case of only one possible directory, it automatically jumps to it
+if [ $length_array == 1 ]
+then
+	cd ${my_array[0]}
+	return
+fi
+
+#In case of mulitple  options it will show them and wait for input of the user
+echo "Choose one to jump to (nothing means first entrance):"
+for index in ${!my_array[@]};
+do
+    echo $index "-" "${my_array[index]}" 
+done
+
+read input_dir
+
+#Change to the right directory
+if [ $input_dir == "" ] 
+then 
+	cd ${my_array[0]}
+elif [ $input_dir -gt $length_array ]
+then
+	return
+else
+	cd ${my_array[$input_dir]}
+fi
